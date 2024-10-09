@@ -1,6 +1,5 @@
 import request from 'supertest'; // Pour effectuer des requêtes HTTP sur l'application Express
 import app from '../app.js'; // L'application Express à tester
-import { Livre } from '../models/livre.model.js'
 
 describe('Livres Controller', () => {
 
