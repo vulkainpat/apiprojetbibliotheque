@@ -5,6 +5,7 @@ import auteurRouter from './routes/auteur.routes.js'; // Routeur pour les routes
 import { errorHandler } from './middlewares/errorHandler.js'; // Middleware pour la gestion des erreurs
 import { config } from 'dotenv'; // Module pour charger les variables d'environnement du fichier .env
 import authRouter from './routes/auth.routes.js'; // Routeur pour les routes d'authentification
+import cors from 'cors';
 
 // Chargement des variables d'environnement
 config();
@@ -29,6 +30,7 @@ app.use('/api/auteurs', auteurRouter);
 
 // Utilisation du middleware pour la gestion des erreurs
 app.use(errorHandler);
+
 
 // Exporter 'app' pour permettre son utilisation dans d'autres fichiers, notamment pour les tests
 export default app;

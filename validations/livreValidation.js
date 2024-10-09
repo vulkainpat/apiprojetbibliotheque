@@ -8,7 +8,7 @@ const postSchema = Joi.object({
   }),
   email: Joi.string().email().required().messages({
     'string.empty': 'L\'email est requis.',
-    'string.email': 'L\email doit être valide.',
+    'string.email': 'L\'email doit être valide.',
     'any.required': 'Le champ "email" est obligatoire.',
   }),
   annee: Joi.number().integer().min(1900).max(new Date().getFullYear()).messages({
@@ -18,15 +18,18 @@ const postSchema = Joi.object({
     'number.max': `L'année ne peut pas être supérieure à ${new Date().getFullYear()}.`,
     'any.required': 'Le champ "année" est obligatoire.',
   }),
-  genre: Joi.string().required().messages({}),
+  password: Joi.string().min(8).required().messages({
+    'string.empty': 'Le mot de passe est requis',
+    'string.password': 'Le mot de passe doit être valide',
+    'any.required': 'Le champ "password" est obligatoire.'
+  })
 });
 
 // Schéma pour validation PUT (champs facultatifs mais validés s'ils sont présents)
 const putSchema = Joi.object({
   titre: Joi.string().optional(),
   email: Joi.string().optional(),
-  annee: Joi.integer().optional(),
-  genre: Joi.string().optional(),
+  annee: Joi.integer().optional()
 });
 
 export const livreValidationSchema = (req, res, next) => {

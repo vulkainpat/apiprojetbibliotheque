@@ -2,8 +2,8 @@
 import jwt from 'jsonwebtoken';
 
 // Récupération de la clé secrète pour vérifier les tokens JWT,
-// soit à partir des variables d'environnement, soit une valeur par défaut 'your_jwt_secret'
-const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+// soit à partir des variables d'environnement, soit une valeur par défaut 'projet_final'
+const secret = process.env.JWT_SECRET || 'projet_final';
 
 // Exportation du middleware 'authenticateToken'
 export const authenticateToken = (req, res, next) => {
@@ -20,7 +20,7 @@ export const authenticateToken = (req, res, next) => {
     if (!token) return res.status(403).json({ message: 'Token requis' });
 
     // Vérification de la validité du token
-    jwt.verify(token, secret, (err, utilisateur) => {
+    jwt.verify(token, secret, (err, user) => {
         // Si une erreur survient lors de la vérification (token invalide ou expiré),
         // renvoyer une erreur 403
         if (err) {
@@ -29,7 +29,7 @@ export const authenticateToken = (req, res, next) => {
 
         // Si le token est valide, attacher les informations de l'utilisateur à la requête
         // Cela permettra aux routes suivantes d'accéder aux informations de l'utilisateur
-        req.utilisateur = utilisateur;
+        req.user = user;
 
         // Passer à la prochaine fonction middleware dans la pile
         next();

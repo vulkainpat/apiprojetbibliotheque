@@ -20,7 +20,7 @@ router.put('/update/:id', authenticateToken, authorize(['admin']), modification)
 
 // Route pour supprimer un utilisateur
 // De même, protégée par l'authentification et l'autorisation
-// router.delete('/delete/:id', authenticateToken, authorize(['admin']), deleteUser);
+//router.delete('/delete/:id', authenticateToken, authorize(['admin']), deleteUser);
 
 // Exportation du routeur pour une utilisation dans l'application principale
 export default router;

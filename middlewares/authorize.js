@@ -11,11 +11,11 @@ export function authorize(roles = []) {
     return (req, res, next) => {
         // Récupération de l'utilisateur à partir de l'objet 'req'
         // Cet utilisateur est généralement attaché dans un middleware d'authentification précédent
-        const utilisateur = req.utilisateur;
+        const user = req.user;
 
         // Vérification si l'utilisateur existe et si son rôle correspond à l'un des rôles autorisés
         // Si l'utilisateur n'existe pas ou si son rôle n'est pas autorisé, renvoie une erreur 403
-        if (!utilisateur || (roles.length && !roles.includes(utilisateur.role))) {
+        if (!user || (roles.length && !roles.includes(user.role))) {
             // Le rôle de l'utilisateur n'est pas autorisé
             return res.status(403).json({ message: 'Accès interdit' });
         }

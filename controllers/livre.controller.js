@@ -1,4 +1,4 @@
-import Livre from '../models/livre.model.js';
+import { Livre } from '../models/livre.model.js';
 
 // Récupération de toutes les livres
 export const getAllLivres = async (req, res, next) => {

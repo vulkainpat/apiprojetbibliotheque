@@ -25,31 +25,32 @@ const createDatabase = async () => {
 };
 
 
-// Fonction pour initialiser Sequelize après la création de la base de données
+// Initialisation de Sequelize sans utilisation de `await` au top-level
+const sequelize = new Sequelize(
+  process.env.MYSQL_DATABASE,
+  process.env.MYSQL_USER,
+  process.env.MYSQL_PASSWORD,
+  {
+    host: process.env.MYSQL_HOST,
+    dialect: 'mysql',
+    logging: false,  // Désactiver le logging SQL pour plus de clarté
+  }
+);
+
+// Exécuter la création de la base de données avant d'exporter Sequelize
 const initializeSequelize = async () => {
   try {
-    await createDatabase();  // Assure-toi que la base de données est créée
-    const sequelize = new Sequelize(
-      process.env.MYSQL_DATABASE,
-      process.env.MYSQL_USER,
-      process.env.MYSQL_PASSWORD,
-      {
-        host: process.env.MYSQL_HOST,
-        dialect: 'mysql',
-        logging: false,  // Désactiver le logging SQL pour plus de clarté (à activer si nécessaire)
-      }
-    );
-
-    // Vérification de la connexion à la base de données
-    await sequelize.authenticate();
-    console.log('Connection to the database has been established successfully.');
-
-    return sequelize;
+    await createDatabase();
+    console.log('Database setup complete.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error.message);
+    console.error('Error during database initialization:', error.message);
     throw error;
   }
 };
 
-// Exporte l'instance de Sequelize pour l'utiliser dans d'autres parties de l'application
-export const sequelize = await initializeSequelize();
+// Appeler la fonction d'initialisation immédiatement et exporter Sequelize
+initializeSequelize().then(() => {
+  console.log('Sequelize is ready.');
+});
+
+export { sequelize };

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'; // Pour créer des tokens JWT
 import Utilisateur from '../models/utilisateur.model.js'; // Le modèle Sequelize pour les utilisateurs
 
 // Clé secrète pour les tokens JWT, à stocker de préférence dans une variable d'environnement
-const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+const secret = process.env.JWT_SECRET || 'projet_final';
 
 // Fonction pour enregistrer un nouvel utilisateur
 export const inscription = async (req, res) => {
@@ -15,14 +15,14 @@ export const inscription = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Création de l'utilisateur avec le mot de passe haché
-    const newUtilisateur = await Utilisateur.create({
+    const newUser = await Utilisateur.create({
       username,
       password: hashedPassword,
       role: "user", // Par défaut, l'utilisateur aura le rôle 'user'
     });
 
     // Réponse avec le statut 201 (Created) et les données de l'utilisateur créé
-    res.status(201).json(newUtilisateur);
+    res.status(201).json(newUser);
   } catch (error) {
     // En cas d'erreur, renvoie une réponse d'erreur
     res.status(500).json({ message: 'Erreur lors de la création de l’utilisateur', error });
@@ -36,15 +36,15 @@ export const connexion = async (req, res) => {
     const { username, password } = req.body;
 
     // Recherche de l'utilisateur par son nom d'utilisateur
-    const utilisateur = await Utilisateur.findOne({ where: { username } });
+    const user = await Utilisateur.findOne({ where: { username } });
 
     // Si l'utilisateur n'est pas trouvé, renvoie une erreur 404
-    if (!utilisateur) {
+    if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
     // Vérification si le mot de passe est correct
-    const isPasswordCorrect = await bcrypt.compare(password, utilisateur.password);
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     // Si le mot de passe est incorrect, renvoie une erreur 400
     if (!isPasswordCorrect) {
@@ -52,10 +52,10 @@ export const connexion = async (req, res) => {
     }
 
     // Si le mot de passe est correct, création d'un token JWT
-    const token = jwt.sign({ username: utilisateur.username, id: utilisateur.id, role: utilisateur.role }, secret, { expiresIn: '1h' });
+    const token = jwt.sign({ username: user.username, id: user.id, role: user.role }, secret, { expiresIn: '1h' });
 
     // Renvoie les informations de l'utilisateur et le token
-    res.status(200).json({ result: utilisateur, token });
+    res.status(200).json({ result: user, token });
   } catch (error) {
     // En cas d'erreur, renvoie une réponse d'erreur
     res.status(500).json({ message: 'Erreur lors de la connexion', error });
@@ -71,10 +71,10 @@ export const modification = async (req, res) => {
 
   try {
     // Recherche de l'utilisateur par son ID
-    const utilisateur = await Utilisateur.findByPk(id);
+    const user = await Utilisateur.findByPk(id);
 
     // Si l'utilisateur n'est pas trouvé, renvoie une erreur 404
-    if (!utilisateur) {
+    if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
 
@@ -82,7 +82,7 @@ export const modification = async (req, res) => {
     const hashedPassword = password ? await bcrypt.hash(password, 12) : user.password;
 
     // Mise à jour de l'utilisateur avec les nouvelles données
-    const modification = await utilisateur.update({ password: hashedPassword, role });
+    const modification = await user.update({ password: hashedPassword, role });
 
     // Création d'un nouveau token JWT pour l'utilisateur mis à jour
     const token = jwt.sign({ username: modification.username, id: modification.id, role: modification.role }, secret, { expiresIn: '1h' });
